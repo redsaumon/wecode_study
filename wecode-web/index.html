@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeonu</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <style>
+        @import url(//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+        @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+        .ngc {
+            font-family: 'Nanum Gothic Coding', monospace;
+        }
+
+        .ng {
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+
+
+
+        body {
+            background: linear-gradient(to right, #ea6ead, #3794e4);
+            color: white;
+        }
+
+        #wrap {
+
+            width: 60%;
+            height: 700px;
+            margin: auto;
+            margin-top: 8%;
+            border: 5px dotted #fb5184;
+
+        }
+
+        #head {
+            padding-top: 3%;
+            text-align: center;
+        }
+
+        img {
+            width: 16%;
+            height: 30%;
+        }
+
+        #cardground {
+            padding-top: 10%;
+            padding-left: 1%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="head">
+            <h1 class="ngc">카드 짝 맞추기</h1>
+            *카드마다 연결 페이지가 다름*
+        </div>
+        <div id="wrapper">
+            <div id="cardground"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function shuffle() { // 카드 섞기
+            var carddeck = [
+                'me1',
+                'me2',
+                'me3',
+                'me1',
+                'me2',
+                'me3',
+            ]
+            var j, x, i;
+            for (i = carddeck.length; i; i -= 1) {
+                j = Math.floor(Math.random() * i);
+                x = carddeck[i - 1];
+                carddeck[i - 1] = carddeck[j];
+                carddeck[j] = x;
+            }
+            return carddeck;
+        }
+
+        function cardset() { //카드 깔기
+            var mixup = shuffle(); //카드 섞기
+            for (var i = 0; i < mixup.length; i++) { //랜덤 정렬된 배열 길이만큼 돌면서 카드 깔기
+                var createcard = "<img src='img/card.jpg' class=" + mixup[i] +
+                    " width='100px' height='150px'>&nbsp"
+                $("#cardground").append(createcard);
+            }
+        }
+
+        cardset();
+
+        $(document).ready(function () {
+            $(document).on("click", "img", function () { //클릭시 id 값 가져와서 사진 매치 시키기
+                var check = $(this).hasClass(
+                    'back');
+                var CSS = $(this).attr('class');
+
+                if (!check && CSS != "success") { //최초 선택
+                    $(this).attr('src', 'img/' + CSS + '.jpg'); //클릭한 카드에 이미지, class명 추가
+                    $(this).addClass("back");
+                } else {
+                    console.log("back");
+                }
+                var BackLength = $(".back").length;
+
+                if (BackLength == 2) { //사진 두 장 선택 시
+                    var FirstB = $('.back').eq(0).attr('class'); //첫번째로 선택된 사진
+                    var SecondB = $('.back').eq(1).attr('class'); //두번째로 선택된 사진
+                    if (FirstB != SecondB) { //서로 class명이 일치하지 않으면
+                        setTimeout(function () {
+                            $(".back").attr('src', 'img/card.jpg'); //사진 다시 뒤집어줌
+                            $("img").removeClass("back");
+                        }, 500);
+                    } else if (FirstB == 'me1 back') {
+                        location.href = "me.html";
+                    } else if (FirstB == 'me2 back') {
+                        location.href = "hobby.html";
+                    } else {
+                        location.href = "fail.html";
+                    }
+                }
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>
